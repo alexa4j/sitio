@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Dirección</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Formulario de Dirección</h1>
+    <form id="direccion-form">
+        <label for="calle">Calle:</label>
+        <input type="text" id="calle" name="calle" required><br><br>
+
+        <label for="numero">Número:</label>
+        <input type="text" id="numero" name="numero" required><br><br>
+
+        <label for="ciudad">Colonia:</label>
+        <input type="text" id="ciudad" name="ciudad" required><br><br>
+
+        <label for="cp">Municipio:</label>
+        <input type="text" id="cp" name="cp" required><br><br>
+
+        <label for="pais">Estado:</label>
+        <input type="text" id="pais" name="pais" required><br><br>
+
+        <button type="button" onclick="guardarDireccion()">ENVIAR PEDIDO</button>
+    </form>
+</div>
+    <script src="datos.js"></script>
+</body>
+</html>
