@@ -1,43 +1,74 @@
-function guardarDatos() {
-    let nombre = document.getElementById('name').value;
-    let fecha = document.getElementById('fecha').value;
-    let pizza1 = document.getElementById('pizza1').value;
-    let pizza2 = document.getElementById('pizza2').value;
-    let pizza3 = document.getElementById('pizza3').value;
-    let metodoEntrega = document.querySelector('input[name="entrega"]:checked')?.value;
+function mostrarCamposPago() {
+  const formaPago = document.getElementById('formaPago').value;
+  const datosTarjeta = document.getElementById('datosTarjeta');
+  datosTarjeta.style.display = (formaPago === 'Tarjeta') ? 'block' : 'none';
+}
 
-    
-    let precios = { "Mexicana": 10, "Pepperoni": 12, "Hawaiana": 11 };
-    let total = precios[pizza1] + precios[pizza2] + precios[pizza3];
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const nombrePropiedad = params.get("propiedad") || "Propiedad Seleccionada";
+  document.getElementById("propiedadNombre").textContent = nombrePropiedad;
 
-    
-    let quesoExtra = document.getElementById('QuesoExt').checked ? 2 : 0;
-    let refresco = document.getElementById('Refresco').checked ? 1.5 : 0;
-    let orillaQueso = document.getElementById('OrQueso').checked ? 2.5 : 0;
-    let papas = document.getElementById('Papas').checked ? 3 : 0;
+  // Validación en tiempo real para el número de tarjeta (solo 16 dígitos)
+  const numTarjeta = document.getElementById("numeroTarjeta");
+  numTarjeta.addEventListener("input", () => {
+    numTarjeta.value = numTarjeta.value.replace(/\D/g, "").slice(0, 16);
+  });
 
-    let extras = quesoExtra + refresco + orillaQueso + papas;
-    total += extras;
+  // Validación en tiempo real para CVV (solo 3 dígitos)
+  const cvv = document.getElementById("cvv");
+  cvv.addEventListener("input", () => {
+    cvv.value = cvv.value.replace(/\D/g, "").slice(0, 3);
+  });
+});
 
-    
-    if (!nombre || !fecha || !pizza1 || !pizza2 || !pizza3 || !metodoEntrega) {
-        alert("Por favor, complete todos los campos.");
-        return;
+function procesarPago() {
+  const nombre = document.getElementById('nombre').value.trim();
+  const formaPago = document.getElementById('formaPago').value;
+
+  if (nombre === '' || formaPago === '') {
+    alert('Por favor completa tu nombre y selecciona una forma de pago.');
+    return;
+  }
+
+  if (formaPago === 'Tarjeta') {
+    const tarjetaNombre = document.getElementById('tarjetaNombre').value.trim();
+    const numeroTarjeta = document.getElementById('numeroTarjeta').value.trim();
+    const exp = document.getElementById('exp').value;
+    const cvv = document.getElementById('cvv').value.trim();
+
+    if (tarjetaNombre === '' || numeroTarjeta === '' || exp === '' || cvv === '') {
+      alert('Por favor llena todos los campos de la tarjeta.');
+      return;
     }
 
-    
-    localStorage.setItem('nombre', nombre);
-    localStorage.setItem('fecha', fecha);
-    localStorage.setItem('pizza1', pizza1);
-    localStorage.setItem('pizza2', pizza2);
-    localStorage.setItem('pizza3', pizza3);
-    localStorage.setItem('metodoEntrega', metodoEntrega);
-    localStorage.setItem('total', total);
-
-    
-    if (metodoEntrega === "Consumo local") {
-        window.location.href = 'envio2.html';  
-    } else if (metodoEntrega === "Envio a domicilio") {
-        window.location.href = 'datos.html';  
+    if (!/^\d{16}$/.test(numeroTarjeta)) {
+      alert('El número de tarjeta debe tener exactamente 16 dígitos numéricos.');
+      return;
     }
+
+    if (!/^\d{3}$/.test(cvv)) {
+      alert('El CVV debe tener exactamente 3 dígitos numéricos.');
+      return;
+    }
+  }
+
+  generarPDF(nombre, formaPago);
+}
+
+function generarPDF(nombre, formaPago) {
+  const propiedad = document.getElementById('propiedadNombre').textContent;
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(18);
+  doc.text("Documento de Escritura", 20, 20);
+
+  doc.setFontSize(12);
+  doc.text(`Propiedad: ${propiedad}`, 20, 40);
+  doc.text(`Comprador: ${nombre}`, 20, 50);
+  doc.text(`Forma de Pago: ${formaPago}`, 20, 60);
+  doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 70);
+
+  doc.save("escritura_alehouse.pdf");
 }

@@ -2,14 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contacto - Alehouse</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agendar Cita - Alehouse</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>Contacto</h1>
-    <p class="eslogan">¡Tu nuevo hogar te espera con Alehouse!</p>
+    <h1>Agendar Cita</h1>
     <nav>
       <ul>
         <li><a href="index1.html">Inicio</a></li>
@@ -25,14 +24,14 @@
   </header>
 
   <main>
-    <form 
-      class="contacto" 
-      action="https://formsubmit.co/runsaxzg@gmail.com" 
-      method="POST" 
-      novalidate 
-      id="contacto-form"
+    <form
+      class="agendar-cita"
+      action="https://formsubmit.co/runsaxzg@gmail.com"
+      method="POST"
+      novalidate
+      id="agendar-cita-form"
     >
-      <h2>Contacto</h2>
+      <h2>Agendar Cita</h2>
 
       <input type="hidden" name="_captcha" value="false" />
       <input type="hidden" name="_next" value="" />
@@ -43,18 +42,21 @@
       <label for="email">Correo electrónico:</label>
       <input type="email" id="email" name="email" required placeholder="ejemplo@correo.com" />
 
-      <label for="asunto">Asunto:</label>
-      <input type="text" id="asunto" name="asunto" required placeholder="Asunto del mensaje" />
+      <label for="fecha">Fecha deseada:</label>
+      <input type="date" id="fecha" name="fecha" required />
 
-      <label for="mensaje">Mensaje:</label>
-      <textarea id="mensaje" name="mensaje" rows="4" required placeholder="Escribe tu mensaje aquí"></textarea>
+      <label for="hora">Hora deseada:</label>
+      <input type="time" id="hora" name="hora" required />
 
-      <button type="submit">Enviar</button>
+      <label for="mensaje">Comentarios:</label>
+      <textarea id="mensaje" name="mensaje" rows="4" placeholder="Escribe algún comentario adicional"></textarea>
+
+      <button type="submit">Agendar</button>
     </form>
 
     <!-- Mensaje de éxito -->
     <p id="mensaje-exito" style="display: none; color: green; font-weight: bold; margin-top: 10px;">
-      ¡Mensaje enviado correctamente!
+      ¡Cita agendada correctamente!
     </p>
   </main>
 
@@ -63,11 +65,11 @@
   </footer>
 
   <script>
-    const form = document.getElementById('contacto-form');
+    const form = document.getElementById('agendar-cita-form');
     const mensajeExito = document.getElementById('mensaje-exito');
 
     form.addEventListener('submit', function (e) {
-      e.preventDefault(); // Evita la recarga de página
+      e.preventDefault();
 
       const formData = new FormData(form);
 
@@ -77,16 +79,14 @@
         headers: {
           'Accept': 'application/json'
         }
-      })
-      .then(response => {
+      }).then(response => {
         if (response.ok) {
           mensajeExito.style.display = 'block';
           form.reset();
         } else {
-          alert('Hubo un error al enviar el mensaje. Intenta de nuevo.');
+          alert('Hubo un error al enviar la cita. Intenta de nuevo.');
         }
-      })
-      .catch(() => {
+      }).catch(() => {
         alert('Error de red. Intenta más tarde.');
       });
     });
