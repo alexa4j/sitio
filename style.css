@@ -103,10 +103,10 @@ main h2 {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px var(--verde-claro);
 }
-
 .propiedad img {
   width: 100%;
-  height: auto;
+  height: 200px; /* Altura fija */
+  object-fit: cover; /* Corta y ajusta sin distorsionar */
   border-radius: var(--radio);
   box-shadow: 0 4px 15px rgba(0,0,0,0.7);
   transition: transform 0.3s ease;
